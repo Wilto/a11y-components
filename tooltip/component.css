@@ -20,3 +20,53 @@
 [aria-hidden="true"] {
 	display: none;
 }
+
+/* Tooltip structure
+-------------------------- */
+
+.mwf-tooltip-wrap {
+	position: relative;
+}
+.mwf-tooltip {
+	top: 100%;
+	position: absolute;
+	left: 0;
+	z-index: 2;
+}
+.mwf-tooltip-collide-right {
+	left: auto;
+	right: 0;
+}
+
+/* Tooltip theming
+-------------------------- */
+.mwf-tooltip {
+	background: #fafafa;
+	border: 1px solid #999;
+	width: 10em;
+	padding: .5em;
+}
+.custom-styling {
+	width: 35em;
+}
+.testhed {
+	clear: left;
+	display: inline-block;
+}
+.test-class {
+	display: inline-block;
+}
+.link-like {
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+
+	background: none;
+	border: none;
+	cursor: pointer;
+	position: relative;
+	top: -.5em;
+	line-height: inherit;
+	margin: 0;
+	padding: 0;
+}

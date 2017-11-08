@@ -1,29 +1,36 @@
 (function() {
 	// Get all the toggletip buttons:
 	const toggles = document.querySelectorAll( '[data-tooltip]' ),
-		clickOut = function( e ) {
+		bailOut = function( e ) {
+			const target = e.relatedTarget || e.target,
 			// Find any toggles associated with open tooltips:
-			const activeToggle = document.querySelector( '[aria-expanded="true"]' );
+				activeToggle = document.querySelector( '[aria-expanded="true"]' );
 
-			if( activeToggle && !activeToggle.nextSibling.contains( e.target ) ) {
+			if( activeToggle && !activeToggle.nextSibling.contains( target ) ) {
 				setVisibility( activeToggle, false );
 			}
 		},
 		setVisibility = function( el, state ) {
 			const tooltip = el.nextElementSibling;
+			var collision;
 
 			// Toggle the visibility of the associated tooltip:
 			tooltip.setAttribute( 'aria-hidden', !state );
 
 			// Set the toggle’s expanded state:
 			el.setAttribute( 'aria-expanded', state );
+
+			// Add a class if tooltip would collide with right side of viewport:
+			collision = tooltip.getBoundingClientRect().right >= window.innerWidth;
+			tooltip.classList[ collision ? 'add' : 'remove']( 'mwf-tooltip-collide-right' );	
 		},
 		toggle = function( e ) {
 			/* ---------------------------------------------- */
 			/* Invert the state of the associated tooltip.
 			------------------------------------------------- */
-			var el = e.target,
-				state = el.getAttribute( 'aria-expanded' ) === "false";
+			const el = e.target,
+				state = el.getAttribute( 'aria-expanded' ) === "false",
+				tooltip = el.nextElementSibling;
 
 			// Close any open tooltips:
 			closeAll();
@@ -52,9 +59,19 @@
 			/* ---------------------------------------------- */
 			/* Create tooltips, if they don’t exist.
 			------------------------------------------------- */
-			const tooltip = document.createElement( 'span' ),
-				msg = el.getAttribute( "data-tooltip" ),
-				refid = 'mwf-tooltip-' + i;
+			const msg = el.getAttribute( "data-tooltip" ),
+				target = el.getAttribute( "aria-controls" ),
+				// If a tooltip is specified via `aria-controls`, use that; else, create a `div`:
+				tooltip = document.getElementById( target ) || document.createElement( 'div' ),
+				refid = tooltip.id || 'mwf-tooltip-' + i,
+				wrap = document.createElement( 'span' );
+
+			/* ----------------------------------- */
+			/* Wrap the tooltip/toggle for styling:
+			-------------------------------------- */
+			wrap.classList.add( 'mwf-tooltip-wrap' );
+			el.parentNode.insertBefore( wrap, el );
+			wrap.append( el );
 
 			/* ----------------------------------- */
 			/* ARIA up the toggles:
@@ -64,11 +81,15 @@
 			el.setAttribute( 'aria-controls', refid );
 
 			/* ----------------------------------- */
-			/* Create the tooltip:
+			/* Augment the tooltip:
 			-------------------------------------- */
 			// Class(es) for theming:
+			if( target !== null ) {
+				tooltip.classList.add( 'mwf-rich-tooltip' );
+			}
 			tooltip.classList.add( 'mwf-tooltip' );
 
+			// `aria-hidden` the generated tooltip
 			tooltip.setAttribute( 'aria-hidden', 'true' );
 
 			// Make the tooltip itself programmatically focusable:
@@ -89,13 +110,10 @@
 			// Toggle the tooltip on interaction:
 			el.addEventListener( 'click', toggle );
 
-			// Close the tooltip when `esc` is pressed:
-			document.addEventListener( 'keydown', function( e ) {
-				if( ( e.keyCode || e.which ) === 27 ) {
-					closeAll();
-				}
-			});
+			// If focus lands outside the open tooltip, close it:
+			tooltip.addEventListener( "focusout", bailOut );
 
+			// Run built-in tests:
 			spotcheck( el );
 		},
 		spotcheck = function( el ) {
@@ -103,24 +121,35 @@
 			/* Perform checks for common a11y issues.
 			------------------------------------------------- */
 			const check = function( ev, msg, type ) {
-				if ( ev ) {
-					console[ type ]( msg );
-				}
-			};
+					if ( ev ) {
+						console[ type ]( msg );
+					}
+				},
+				desc = el.innerHTML,
+				label = el.getAttribute( 'aria-label' ),
+				copy = el.getAttribute( 'data-tooltip' );
 
 			/* Warnings
 			-------------------------- */
-			check( el.nodeName !== 'BUTTON', 'Toggles should be `button` elements.', 'warn' );
+			check( !desc && label === null, 'Tooltip toggle needs either discoverable text or `aria-label`.', 'warn' );
+			check( copy.length > 100, 'Simple tooltips shouldn\'t be used for long runs of text.' , 'warn' );
 
 			/* Errors
 			-------------------------- */
-			const message = el.getAttribute( 'data-tooltip' );
-			check( !message, 'Tooltip message cannot be empty', 'error' );
+			check( el.nodeName !== 'BUTTON', 'Toggles should be `button` elements.', 'error' );
 		};
 
 	// Iterate over the trigger elements:
 	Array.prototype.forEach.call( toggles, init );
 
-	//
-	document.addEventListener( 'click', clickOut );
+	// Clicking outside an open tooltip should close it:
+	document.addEventListener( 'click', bailOut );
+
+	// `esc` should close any open tooltips:
+	document.addEventListener( 'keydown', function( e ) {
+		if( ( e.keyCode || e.which ) === 27 ) {
+			closeAll();
+		}
+	});
+
 }());
