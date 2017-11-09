@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Tooltip Component Prototype</title>
 	<link rel="stylesheet" type="text/css" href="component.css">
 </head>
 <body>
+	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod<button class="link-like" data-tooltip="This is a simple tooltip, styled to look like a link.">[i]</button> tempor incididunt ut labore et dolore magna aliqua.</p>
 
-
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod<button type="button" class="link-like" data-tooltip="This is the second tooltip">[i]</button> tempor incididunt ut labore et dolore magna aliqua.</p>
-
-	<button type="button" aria-label="more info" data-tooltip aria-controls="rich">More Info</button>
+	<button type="button" data-tooltip aria-controls="rich">More Info</button>
 	<div id="rich" class="custom-styling">
 		<p>This is a <a href="#">rich tooltip</a>.</p>
 
