@@ -37,6 +37,10 @@
 	left: auto;
 	right: 0;
 }
+.mwf-tooltip-collide-bottom {
+	bottom: 100%;
+	top: auto;
+}
 
 /* Tooltip theming
 -------------------------- */
@@ -46,7 +50,7 @@
 	width: 10em;
 	padding: .5em;
 }
-.custom-styling {
+.rich {
 	width: 35em;
 }
 .testhed {
@@ -56,17 +60,4 @@
 .test-class {
 	display: inline-block;
 }
-.link-like {
-	appearance: none;
-	-moz-appearance: none;
-	-webkit-appearance: none;
 
-	background: none;
-	border: none;
-	cursor: pointer;
-	position: relative;
-	top: -.5em;
-	line-height: inherit;
-	margin: 0;
-	padding: 0;
-}

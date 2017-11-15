@@ -22,7 +22,11 @@
 
 			// Add a class if tooltip would collide with right side of viewport:
 			collision = tooltip.getBoundingClientRect().right >= window.innerWidth;
-			tooltip.classList[ collision ? 'add' : 'remove']( 'mwf-tooltip-collide-right' );	
+			tooltip.classList[ collision ? 'add' : 'remove']( 'mwf-tooltip-collide-right' );
+
+			// Add a class if tooltip would collide with bottom of viewport:
+			collision = tooltip.getBoundingClientRect().bottom >= window.innerHeight;
+			tooltip.classList[ collision ? 'add' : 'remove']( 'mwf-tooltip-collide-bottom' );
 		},
 		toggle = function( e ) {
 			/* ---------------------------------------------- */
