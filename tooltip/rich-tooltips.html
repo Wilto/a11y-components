@@ -3,40 +3,202 @@
 <head>
 	<title>Tooltip Component Prototype</title>
 	<link rel="stylesheet" type="text/css" href="component.css">
+
+	<meta charset="utf-8">
+
+	<style type="text/css">
+		.demo {
+			border: 2px solid #ddd;
+			padding: .5em 1em 1em 1em;
+		}
+		.demo:after {
+			content: "";
+			clear: both;
+			display: table;
+		}
+
+		p, li {
+			font-size: 1.2em;
+			max-width: 50em;
+			line-height: 1.3;
+		}
+		li {
+			margin: .33em 0;
+		}
+
+		code {
+			background: #f1f1f1;
+			padding: 0 .25em;
+			border-radius: .25em;
+			font-size: 1.1em;
+			line-height: 1.4;
+		}
+		pre {
+			background: #f1f1f1;
+			padding: .5em 1em;
+			margin: 0 0 2.5em 0;
+		}
+		pre code {
+			border: none;
+			padding: 0;
+		}
+
+		.throw-right {
+			float: right;
+			padding-bottom: 1.5em;
+		}
+
+		p {
+			clear: both;
+		}
+
+		.custom-styling {
+			background-color: #f7f7f7;
+			outline: 6px solid rgba(0,0,0,.25);
+			border-radius: .25em;
+			border: none;
+			padding: 0 1em;
+			width: 25em;
+			font-family: sans-serif;
+		}
+		.custom-styling:focus {
+			outline: 6px solid rgba(0,100,150,.35);
+		}
+
+		.link-like {
+			appearance: none;
+			-moz-appearance: none;
+			-webkit-appearance: none;
+
+			background: none;
+			border: none;
+			cursor: pointer;
+			position: relative;
+			color: blue;
+			top: -.5em;
+			line-height: inherit;
+			margin: 0;
+			padding: 0;
+		}
+
+		.icon {
+			height: 1.75em;
+			width: 1.75em;
+			display: inline-block;
+			outline: none;
+			position: relative;
+			margin-left: .75em;
+			border: none;
+			border-radius: 50%;
+			border: 1px solid #fff;
+		}
+		.icon::-moz-focus-inner {
+			outline: none;
+		}
+		.icon:focus {
+			box-shadow: 0 0 1.25em rgba(0,100,150,.85);
+		}
+		.icon-info {
+			background: url(https://image.flaticon.com/icons/svg/148/148769.svg);
+			background-size: cover;
+		}
+
+	</style>
 </head>
 <body>
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod<button class="link-like" data-tooltip="This is a simple tooltip, styled to look like a link.">[i]</button> tempor incididunt ut labore et dolore magna aliqua.</p>
 
-	<button type="button" data-tooltip aria-controls="rich">More Info</button>
-	<div id="rich" class="custom-styling">
-		<p>This is a <a href="#">rich tooltip</a>.</p>
+	<h1>Accessible Tooltips</h1>
+	<p>This prototype is intended to demonstrate an accessible pattern for both simple and rich tooltips, configurable through markup alone.</p>
 
-		<label>
-			A focusable input
-			<input type="text">
-		</label>
+	<p>Use a <code>button</code> element with a <code>data-tooltip</code> attribute to instantiate a tooltip.</p>
 
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-		tempor incididunt ut labore et dolore magna aliqua. <a href="#">Ut enim ad</a> minim veniam,
-		quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+	<p>For simple tooltips, <code>data-tooltip</code> will accept a string and generate all necessary markup, ARIA associations, and so on:</p>
+<pre><code>&lt;button data-tooltip="This generates a simple tooltip.">Tooltip&lt;/button></code></pre>
+
+	<p>For rich tooltips omit a value on the <code>data-tooltip</code> attribute, and include an <code>data-controls</code> attribute pointing at the ID of the associated rich tooltip:</p>
+
+<pre><code>&lt;button type="button" data-tooltip aria-controls="rich">&lt;/button>
+&lt;div id="rich" class="custom-styling"> 
+    &lt;p>This is a &lt;a href="#">rich tooltip&lt;/a>.&lt;/p> 
+&lt;/div></code></pre>
+
+	<p>The rich tooltip element should immediately follow the instantiating <code>button</code> whenever possible.</p>
+
+	<p>As long as that markup has been supplied, <code>aria-haspopup</code>, <code>aria-expanded</code>, and <code>aria-controls</code> (for simple tooltips) will all be added to the toggle programmatically—likewise for <code>aria-hidden</code>, <code>tabindex="-1"</code>, and an ID associated with the toggle’s <code>aria-controls</code> attribute, on the popup element itself.</p>
+
+	<h2>Notes:</h2>
+	<ul>
+		<li>Focus is managed to the open tooltip wrapper itself</li>
+		<li>The tooltip is closed once focus leaves it entirely—focusable elements inside the rich tooltips should work as expected</li>
+		<li>Interacting with any other elements on the page (or the page itself) closes the tooltip</li>
+		<li>If the developer includes more than 100 characters in a simple tooltip, the script throws a warning in the developer console, reading “simple tooltips shouldn’t be used for long runs of text.” We can finesse this value to whatever we’d like.</li>
+		<li>It includes very basic collision detection—if opening a tooltip would cause it to fall outside the right side of the browser viewport, it’ll automatically be shifted to the left.</li>
+	</ul>
+
+	<h2>Demos</h2>
+
+	<div class="demo">
+		<h3>Simple Tooltips</h3>
+		<button data-tooltip="This is a simple tooltip.">Simple Tooltip</button>
+
+		<h3>Rich Tooltips</h3>
+		<p>The following is an example of a tooltip designed to include HTML elements as well as text. The element is included in the page source, and linked to the toggle <code>button</code> using <code>aria-controls</code>.</p>
+		<button type="button" data-tooltip aria-controls="rich">Rich Tooltip</button>
+		<div id="rich" class="rich">
+			<p>This is a <a href="#">rich tooltip</a>.</p>
+
+			<label>
+				A focusable input
+				<input type="text">
+			</label>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. <a href="#">Ut enim ad</a> minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+		</div>
+
+		<h3>Styling Toggles</h3>
+		<p>Tooltip <code>button</code> toggles accept custom styles, as expected. Note that the toggle element will be wrapped in a <code>span</code> for the sake of positioning the opened tooltip, and will have to be accounted for when applying layout styles.</p>
+
+		<button class="icon icon-info" data-tooltip="This is a tooltip toggle with custom styles applied."><span class="sr-text">More Info</span></button>
+
+		<p>In the paragraph below, a simple tooltip toggle is styled to resemble an <code>a</code> element, for use as a citation.</p>
+
+		<blockquote>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod<button class="link-like" data-tooltip="This is a simple tooltip, styled to look like a link." aria-label="Citation-style tooltip">[i]</button> tempor.</p>
+		</blockquote>
+
+		<h3>Styling Rich Tooltips</h3>
+		<p>Rich tooltip element will accept custom styling classes as expected:</p>
+		<button data-tooltip aria-controls="rich-2">More Info</button>
+		<div id="rich-2" class="custom-styling">
+			<p>This is a rich tooltip with custom styling.</p>
+
+			<label>
+				A focusable input
+				<input type="text">
+			</label>
+
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+			tempor incididunt ut labore et dolore magna aliqua. <a href="#">Ut enim ad</a> minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
+		</div>
+
+		<h3>Console Warnings</h3>
+		<p>The following simple tooltip contains enough text that it would be excessively verbose when read aloud by assistive technology, and issues a warning in the developer console.</p>
+
+		<button data-tooltip="This is a tooltip with way too much text in it. Any simple tooltip with over 100 characters in it will throw a warning in the developer console.">Warning Tooltip</button>
+
+		<h3>Basic Collision Detection</h3>
+		<p>If a tooltip would collide with the right side of the browser viewport when opened, a class is applied to shift it to the left:</p>
+		<div class="throw-right">
+			<button data-tooltip="This tooltip demos basic collision detection.">Simple Tooltip</button>
+		</div>
+		<p>If a tooltip would collide with the bottom of the browser viewport when opened, a class is applied to shift it to the top:</p>
+
+		<button data-tooltip="This tooltip demos basic collision detection.">Simple Tooltip</button>
 	</div>
 
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
-	<h2 class="testhed">This is a heading</h2>
-	<button type="button" aria-label="more info" class="test-class" data-tooltip="This is a tooltip with way too much text in it. Any simple tooltip with over 100 characters in it will throw a warning in the developer console.">i</button>
-
-	<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-	tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-	quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-	consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-	cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-	proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
 	<script src="component.js"></script>
 </body>
