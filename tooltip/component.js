@@ -64,6 +64,7 @@
 			/* Create tooltips, if they don’t exist.
 			------------------------------------------------- */
 			const msg = el.getAttribute( "data-tooltip" ),
+				message = document.createTextNode( msg ),
 				target = el.getAttribute( "aria-controls" ),
 				// If a tooltip is specified via `aria-controls`, use that; else, create a `div`:
 				tooltip = document.getElementById( target ) || document.createElement( 'div' ),
@@ -103,7 +104,7 @@
 			tooltip.id = refid;
 
 			// Tooltip message:
-			tooltip.appendChild( msg );
+			tooltip.appendChild( message );
 
 			// Add the tooltip to the DOM:
 			el.parentNode.insertBefore( tooltip, el.nextSibling );
