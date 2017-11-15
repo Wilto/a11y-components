@@ -103,7 +103,7 @@
 			tooltip.id = refid;
 
 			// Tooltip message:
-			tooltip.append( msg );
+			tooltip.appendChild( msg );
 
 			// Add the tooltip to the DOM:
 			el.parentNode.insertBefore( tooltip, el.nextSibling );
