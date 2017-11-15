@@ -12,7 +12,7 @@
 		},
 		setVisibility = function( el, state ) {
 			const tooltip = el.nextElementSibling;
-			var collision;
+			let collision;
 
 			// Toggle the visibility of the associated tooltip:
 			tooltip.setAttribute( 'aria-hidden', !state );
@@ -75,7 +75,7 @@
 			-------------------------------------- */
 			wrap.classList.add( 'mwf-tooltip-wrap' );
 			el.parentNode.insertBefore( wrap, el );
-			wrap.append( el );
+			wrap.appendChild( el );
 
 			/* ----------------------------------- */
 			/* ARIA up the toggles:
@@ -87,7 +87,7 @@
 			/* ----------------------------------- */
 			/* Augment the tooltip:
 			-------------------------------------- */
-			// Class(es) for theming:
+			// Add rich tooltip class:
 			if( target !== null ) {
 				tooltip.classList.add( 'mwf-rich-tooltip' );
 			}
