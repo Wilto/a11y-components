@@ -83,7 +83,7 @@
 			-------------------------------------- */
 			el.setAttribute( 'aria-haspopup', 'true' );
 			el.setAttribute( 'aria-expanded', 'false' );
-			el.setAttribute( 'aria-controls', refid );
+			el.setAttribute( 'controls', refid );
 
 			/* ----------------------------------- */
 			/* Augment the tooltip:
