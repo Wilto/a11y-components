@@ -92,6 +92,7 @@
 			if( target !== null ) {
 				tooltip.classList.add( 'mwf-rich-tooltip' );
 				tooltip.setAttribute( 'aria-live', 'off' );
+				tooltip.setAttribute( 'aria-atomic', 'false' );
 			}
 			tooltip.classList.add( 'mwf-tooltip' );
 
