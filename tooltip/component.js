@@ -83,7 +83,7 @@
 			-------------------------------------- */
 			el.setAttribute( 'aria-haspopup', 'true' );
 			el.setAttribute( 'aria-expanded', 'false' );
-			el.setAttribute( 'controls', refid );
+			el.setAttribute( 'aria-controls', refid );
 
 			/* ----------------------------------- */
 			/* Augment the tooltip:
@@ -92,7 +92,7 @@
 			if( target !== null ) {
 				tooltip.classList.add( 'mwf-rich-tooltip' );
 				tooltip.setAttribute( 'aria-live', 'off' );
-				tooltip.setAttribute( 'aria-role', 'presentation' );
+				tooltip.setAttribute( 'role', 'presentation' );
 			}
 			tooltip.classList.add( 'mwf-tooltip' );
 
