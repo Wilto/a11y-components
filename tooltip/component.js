@@ -43,7 +43,7 @@
 			setVisibility( el, state );
 
 			// Manage focus to the tooltip itself:
-			el.nextElementSibling.focus();
+			//el.nextElementSibling.focus();
 
 			e.stopPropagation();
 		},
