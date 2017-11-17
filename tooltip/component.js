@@ -91,6 +91,7 @@
 			// Add rich tooltip class:
 			if( target !== null ) {
 				tooltip.classList.add( 'mwf-rich-tooltip' );
+				tooltip.setAttribute( 'aria-live', 'off' );
 			}
 			tooltip.classList.add( 'mwf-tooltip' );
 
